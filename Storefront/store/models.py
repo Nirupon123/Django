@@ -35,6 +35,12 @@ class Customer(models.Model):
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE) 
+
+    class Meta:
+        db_table='store_customers'
+        indexes=[
+            models.Index(fields=['last_name','first_name'])
+        ]
 class Order(models.Model):
     PAYMENT_PENDING='P'
     PAYMENT_COMPLETE='C'
@@ -58,6 +64,7 @@ class OrderItem(models.Model):
 class Address(models.Model):
     street=models.CharField(max_length=255)
     city=models.CharField(max_length=255)
+    zip=models.CharField(max_length=15,default='')
     # Linking each Order to exactly one Customer.
     # OneToOneField ensures:
     #   - Each customer can have only one related order (1:1 relationship).
