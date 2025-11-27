@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddIndex(
-            model_name='customer',
+            model_name='Customer',
             index=models.Index(fields=['last_name', 'first_name'], name='store_custo_last_na_e6a359_idx'),
         ),
         migrations.AlterModelTable(
-            name='customer',
+            name='Customer',
             table='store_customers',
         ),
     ]
