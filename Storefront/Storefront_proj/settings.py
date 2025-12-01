@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront',   # Your DB name
         'USER': 'root',         # MySQL user
-        'PASSWORD': '', # MySQL password
+        'PASSWORD': 'Ratna@2003', # MySQL password
         'HOST': 'localhost',    # Database host
     }
 }

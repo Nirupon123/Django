@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import  HttpResponse
+from store.models import Product
 
 def say_hello(request):
-    #return HttpResponse("Welcome to the Playground App!")
-    return render(request,'index.html')
+    query_set = Product.objects.filter(unit_price__range=(20, 30))
+    
+    return render(request, 'index.html', {'products': list(query_set)})

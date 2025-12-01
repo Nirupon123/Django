@@ -7,5 +7,17 @@
 </head>
 <body>
     <h1>Hello Udo Chan</h1>
+
+    <h3>Products with unit price between 20 and 30:</h3>
+
+    {% if products %}
+        <ul>
+            {% for item in products %}
+                <li>{{ item.title }} - ₹{{ item.unit_price }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No products found.</p>
+    {% endif %}
 </body>
 </html>
