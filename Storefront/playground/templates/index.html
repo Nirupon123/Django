@@ -6,31 +6,29 @@
     <title>Filtered Products</title>
 </head>
 <body>
-    <h1>Hello Udo Chan</h1>
+    <h1>Hello Udo Chan </h1>
 
-    <h3>Products with title containing "<span style="color:brown">coffee</span>" and price above ₹20:</h3>
+    <h3>Showing only Product IDs from query:</h3>
 
     {% if products %}
         <table border="1" cellspacing="0" cellpadding="8">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Product Name</th>
-                    <th>Price (₹)</th>
+                    <th>Product ID</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in products %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ item.title }}</td>
-                        <td>{{ item.unit_price }}</td>
+                        <td>{{ item.product_id }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p style="color:red;">No matching products found.</p>
+        <p style="color:red;">No products found.</p>
     {% endif %}
 </body>
 </html>

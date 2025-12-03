@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual Environments
+env/
+venv/
+.venv/
+
+# Django DB files
+Storefront/db.sqlite3
+*.sqlite3
+
+# Sensitive Django settings
+Storefront/Storefront_proj/settings.py
+
+# IDE files
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+
+# Byte-compiled and temporary
+*.swp
+*.tmp
+
