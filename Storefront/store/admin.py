@@ -4,15 +4,28 @@ from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.http import urlencode
+from django.contrib.contenttypes.admin import GenericTabularInline
+from tags.models import tagedItem
+
 
 # Register your models here.
+
+class TagInline(GenericTabularInline):
+    autocomplete_fields=['tag']
+    model=tagedItem
+    
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    actions=['clear_inventory']
-    list_display=['title','inventory','unit_price','collection','inventory_status']
+    inlines=[TagInline]
+    prepopulated_fields={
+        'slug': ['title']
+    }
+    list_display=['title','inventory','unit_price',
+                  'collection','inventory_status']
     list_editable=['unit_price','inventory']
-    search_fields = ['title__istartswith']
     list_filter = ['collection','last_update']
+    search_fields = ['title__istartswith']
+    actions=['clear_inventory']
     @admin.display(ordering='inventory')
     def inventory_status(self,product):
         if product.inventory <60 and product.inventory>30:
@@ -65,8 +78,14 @@ class CustomerAdmin(admin.ModelAdmin):
             order_count=Count('order')
         )
    
-
+class OrderItemInline(admin.TabularInline):
+    model=models.OrderItem
+    autocomplete_fields=['product']
+    extra=0
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields=['customer']
+    inlines=[OrderItemInline]
     list_display=['id','placed_at','customer']
+
 
