@@ -24,4 +24,5 @@ admin.site.site_title = "Storefront Admin Portal"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('playground/', include('playground.urls')),
+    path('store/', include('store.urls')),
 ]+ debug_toolbar_urls()
