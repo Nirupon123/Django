@@ -1,11 +1,11 @@
 from django.urls import path
 from . import views
+from rest_framework.routers import SimpleRouter
+
+router=SimpleRouter()
+router.register('Products',views.ProductViewSet,basename='products')
+router.register('Collections',views.collectionviewset,basename='collections')
 
 
 # URL config module
-urlpatterns = [
-    path('Products/', views.product_list), #shows all products
-    path('Products/<int:id>/', views.product_detail), #shows product details by id
-    path('Collections/', views.collection_list), #shows all collections
-    path('Collections/<int:id>/', views.collection_detail) #shows collection details by id
-]
+urlpatterns = router.urls
