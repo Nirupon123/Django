@@ -3,6 +3,8 @@ from decimal import Decimal
 from store.models import Product, Collection
 
 
+
+#product serializer defination
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -11,3 +13,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_price_with_tax(self, product) :
         return product.unit_price * Decimal(1.1)
+    
+#collection serializer defination
+class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ['id', 'title','featured_product'] 
