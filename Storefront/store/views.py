@@ -1,10 +1,7 @@
 from .models import Product,Collection, Review, Cart, CartItem
-from django.shortcuts import get_object_or_404
-from .serializer import ProductSerializer
-from .serializer import CollectionSerializer
-from .serializer import ReviewSerializer
-from .serializer import CartSerializer
-from .serializer import CartItemSerializer
+from .serializer import ProductSerializer,CollectionSerializer,\
+    ReviewSerializer,CartSerializer,CartItemSerializer,\
+    CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,DeleyteCartItemSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -77,7 +74,21 @@ class CartViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet,DestroyMode
 
 
 class CartItemViewSet(ModelViewSet):
-    serializer_class = CartItemSerializer
+    http_method_names = ['get', 'post', 'patch', 'delete']
+
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':   
+            return AddCartItemSerializer  
+        elif self.request.method == 'PATCH':
+            return UpdateCartItemSerializer
+        elif self.request.method == 'DELETE':
+                return DeleyteCartItemSerializer
+        return CartItemSerializer 
+    
+
+    def get_serializer_context(self):
+        return {'cart_id': self.kwargs['cart_pk']}
 
     def get_queryset(self):
         return CartItem.objects.\
