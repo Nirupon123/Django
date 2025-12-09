@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "store",
     "tags",
     "Likes",
+    "Core",
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,4 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
     'PAGE_SIZE': 10
 }
+AUTH_USER_MODEL = "Core.User"
