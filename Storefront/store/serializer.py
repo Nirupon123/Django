@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from decimal import Decimal
-from store.models import Product, Collection, Review, CartItem, Cart
+from store.models import Product, Collection, Review, CartItem, Cart,Customer
+
 
 
 
@@ -88,7 +89,7 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
       
-class DeleyteCartItemSerializer(serializers.ModelSerializer):
+class DeleteCartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ['id']
@@ -96,3 +97,12 @@ class DeleyteCartItemSerializer(serializers.ModelSerializer):
     def delete(self, instance):
         instance.delete()
         return instance
+    
+
+class CustomerSerializer(serializers.ModelSerializer):
+
+    user_id = serializers.IntegerField()
+    class Meta:
+        model=Customer
+        fields=['id','user_id','phone','birth_date','membership']
+   
