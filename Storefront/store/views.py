@@ -1,9 +1,9 @@
-from .models import Product,Collection, Review, Cart, CartItem,Customer
+from .models import Product,Collection, Review, Cart, CartItem,Customer,Order
 from .serializer import ProductSerializer,CollectionSerializer,\
     ReviewSerializer,CartSerializer,CartItemSerializer,\
     CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,\
         DeleteCartItemSerializer,\
-            CustomerSerializer
+            CustomerSerializer,OrderSerializer
 from .permissions import IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
@@ -129,6 +129,20 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)  # CHECKING IF THE INPUT DATA IS VALID OR NOT
             serializer.save() #SAVING IT FOR THE UPDATED DATA  (JSON->QUERY) 
             return Response(serializer.data) #RETURN THE VALUE IN THE APPLICATION
+        
+
+class OrderViewSet(ModelViewSet):
+
+    serializer_class = OrderSerializer  
+    permission_classes=[IsAuthenticated]
+
+    def get_queryset(self):
+        user=self.request.user
+        if user.is_staff:
+            return Order.objects.all()
+        (customer_id,created)=Customer.objects.only('id').get_or_create(user_id=user.id)
+        return Order.objects.filter(customer_id=customer_id)
+    
 
         
 
