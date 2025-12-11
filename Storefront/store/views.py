@@ -5,8 +5,10 @@ from .serializer import ProductSerializer,CollectionSerializer,\
         DeleteCartItemSerializer,\
             CustomerSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.pagination import PageNumberPagination
@@ -98,9 +100,34 @@ class CartItemViewSet(ModelViewSet):
             .select_related('product')
     
 
-class CustomerViewSet(CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,GenericViewSet):
-    queryset=Customer.objects.all()
-    serializer_class=CustomerSerializer
+class CustomerViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, GenericViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    @action(detail = False, methods = ['GET','PUT'])
+    def me(self, request):
+       
+        (customer, created) = Customer.objects.get_or_create(user_id = request.user.id) # Get the customer for the logged-in user OR create one if it doesn't exist
+
+        if request.method == 'GET':
+            serializer = CustomerSerializer(customer) # Convert the customer model instance → JSON (serialization)
+            return Response(serializer.data)
+
+        elif request.method == 'PUT':
+            serializer = CustomerSerializer(customer, data=request.data)  # Deserialize the incoming JSON → update the customer instance
+            serializer.is_valid(raise_exception=True)  # CHECKING IF THE INPUT DATA IS VALID OR NOT
+            serializer.save() #SAVING IT FOR THE UPDATED DATA  (JSON->QUERY) 
+            return Response(serializer.data) #RETURN THE VALUE IN THE APPLICATION
+
+        
+
+
   
    
 
