@@ -4,15 +4,17 @@ from .serializer import ProductSerializer,CollectionSerializer,\
     CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,\
         DeleteCartItemSerializer,\
             CustomerSerializer
+from .permissions import IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticated,DjangoModelPermissions
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin,UpdateModelMixin
+from rest_framework.mixins import ListModelMixin,CreateModelMixin, RetrieveModelMixin, DestroyModelMixin,UpdateModelMixin
 
 
 
@@ -40,11 +42,13 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
-    pagination_class=PageNumberPagination
+    pagination_class = PageNumberPagination
     filterset_fields = ['collection_id']
+    permission_classes = [IsAdminOrReadOnly]
+    
 
-    #def get_serializer_context(self):
-        #return {'request': self.request}
+    def get_serializer_context(self):
+        return {'request': self.request}
 
     def delete(self, request, id):
         product = self.get_object(id)
@@ -100,19 +104,20 @@ class CartItemViewSet(ModelViewSet):
             .select_related('product')
     
 
-class CustomerViewSet(CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, GenericViewSet):
+class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions]         #permission group changing
 
     def get_permissions(self):
-        if self.request.method == 'GET':
-            return [AllowAny()]
-        return [IsAuthenticated()]
+         if self.request.method =='GET':
+             return [AllowAny()]
+         return [IsAuthenticated()]
+
 
     @action(detail = False, methods = ['GET','PUT'])
     def me(self, request):
-       
+        
         (customer, created) = Customer.objects.get_or_create(user_id = request.user.id) # Get the customer for the logged-in user OR create one if it doesn't exist
 
         if request.method == 'GET':
