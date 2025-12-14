@@ -1,9 +1,10 @@
-from .models import Product,Collection, Review, Cart, CartItem,Customer,Order
+from .models import Product,Collection, Review, Cart, CartItem,Customer,Order,ProductImage
 from .serializer import ProductSerializer,CollectionSerializer,\
     ReviewSerializer,CartSerializer,CartItemSerializer,\
     CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,\
         DeleteCartItemSerializer,\
-            CustomerSerializer,OrderSerializer,CreateOrderSerializer,OrderSerializer,UpdateOrderSerializer
+            CustomerSerializer,OrderSerializer,CreateOrderSerializer,\
+                OrderSerializer,UpdateOrderSerializer,PoductImageSerializer
 from .permissions import IsAdminOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
@@ -161,6 +162,17 @@ class OrderViewSet(ModelViewSet):
         return Order.objects.filter(customer_id=customer_id)
     
 
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class=PoductImageSerializer
+
+    def get_serializer_context(self):
+        return{'product_id':self.kwargs['product_pk']}
+    
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
+    
         
 
 
