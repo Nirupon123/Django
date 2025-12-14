@@ -74,6 +74,10 @@ class Customer(models.Model):
     class Meta:
         ordering = ['user__first_name','user__last_name']
 
+class ProductImage(models.Model):
+    product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name='images')
+    image=models.ImageField(upload_to='store/images')
+
 
 class Order(models.Model):
     PAYMENT_STATUS_PENDING = "P"
