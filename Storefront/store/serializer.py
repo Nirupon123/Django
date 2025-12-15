@@ -1,17 +1,27 @@
 from rest_framework import serializers
 from decimal import Decimal
-from .models import Product, Collection, Review, CartItem, Cart,Customer,Order,OrderItem,ProductImage
+from .models import Product, Collection, Review, CartItem,\
+Cart,Customer,Order,OrderItem,ProductImage
 from django.db import transaction
 from .signals import order_created
 
 
-
+class PoductImageSerializer(serializers.ModelSerializer):
+    def create(self,validated_data):
+        product_id=self.context['product_id']
+        return ProductImage.objects.create(product_id=product_id,**validated_data)
+    class Meta:
+        model=ProductImage
+        fields=['id','image']
 
 #product serializer defination
 class ProductSerializer(serializers.ModelSerializer):
+    
+    images=PoductImageSerializer(many=True,read_only=True)
+
     class Meta:
         model = Product
-        fields = ['id', 'title','inventory','description','slug', 'unit_price', 'price_with_tax', 'collection']
+        fields = ['id', 'title','inventory','description','slug', 'unit_price', 'price_with_tax', 'collection','images']
     price_with_tax = serializers.SerializerMethodField(method_name='get_price_with_tax')
 
     def get_price_with_tax(self, product) :
@@ -157,10 +167,4 @@ class CreateOrderSerializer(serializers.Serializer):
             return order
         
 
-class PoductImageSerializer(serializers.ModelSerializer):
-    def create(self,validated_data):
-        product_id=self.context['product_id']
-        return ProductImage.objects.create(product_id=product_id,**validated_data)
-    class Meta:
-        model=ProductImage
-        fields=['id','image']
+

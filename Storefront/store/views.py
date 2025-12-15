@@ -40,7 +40,7 @@ class collectionviewset(ModelViewSet):
 
 # Product list view
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related('images').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
     pagination_class = PageNumberPagination
