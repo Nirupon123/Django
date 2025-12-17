@@ -4,6 +4,7 @@ from django.db.models import Q,F
 from store.models import Product,OrderItem
 from store.models import Collection,Order
 from django.db import transaction
+from django.core.mail import send_mail,BadHeaderError,mail_admins
 
 def say_hello(request):
     #query_set = Product.objects.filter(Q(unit_price__gt=20) & Q(title__icontains='coffee'))
@@ -28,16 +29,20 @@ def say_hello(request):
     #Collection.objects.filter(id__gt=10).delete()
     
     #transactions(ACID-Atomicity)
-    with transaction.atomic():
-            order = Order()
-            order.customer_id=1
-            order.save()
+#     with transaction.atomic():
+#             order = Order()
+#             order.customer_id=1
+#             order.save()
 
-            item=OrderItem()
-            item.order=order
-            item.product_id=1
-            item.quantity=1
-            item.unit_price=10
-            item.save()
+#             item=OrderItem()
+#             item.order=order
+#             item.product_id=1
+#             item.quantity=1
+#             item.unit_price=10
+#             item.save()
 
-    return render(request,'index.html',{'name':'Nirupon'})
+        try:   
+                send_mail(subject='mailcheck',message='this is a test mail',from_email='toilaktonigga@example.com',recipient_list=['uddalaknigga@example.com'])
+        except BadHeaderError:
+                pass
+        return render(request,'index.html',{'name':'Nirupon'})

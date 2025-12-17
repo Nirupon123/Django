@@ -16,6 +16,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.mixins import ListModelMixin,CreateModelMixin, RetrieveModelMixin, DestroyModelMixin,UpdateModelMixin
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 
@@ -165,6 +166,8 @@ class OrderViewSet(ModelViewSet):
 
 class ProductImageViewSet(ModelViewSet):
     serializer_class=PoductImageSerializer
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
         return{'product_id':self.kwargs['product_pk']}
