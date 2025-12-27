@@ -1,0 +1,8 @@
+{
+  "name": "image-upload",
+  "version": "1.0.0",
+  "description": "Simple image upload frontend for Django CORS learning",
+  "scripts": {
+    "start": "npx serve ."
+  }
+}

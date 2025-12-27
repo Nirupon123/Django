@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Image Upload</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="card">
+    <h2>Upload Image</h2>
+
+    <label class="upload-box">
+      <input type="file" id="imageInput" accept="image/*" hidden />
+      <span>Select Image</span>
+    </label>
+
+    <img id="preview" />
+
+    <button id="uploadBtn">Upload</button>
+
+    <p id="status"></p>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
