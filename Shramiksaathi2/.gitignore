@@ -1,0 +1,12 @@
+# Ignore docker-compose file
+backend/docker-compose.yml
+backend/gateway/node_modules
+backend/gateway/.env
+
+backend/services/*/node_modules
+backend/services/*/.env
+
+frontend/.env
+frontend/node_modules
+
+backend/docker-compose.yml
