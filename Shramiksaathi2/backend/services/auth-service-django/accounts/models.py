@@ -1,45 +1,51 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.contrib.gis.db import models as geomodels
+from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.utils import timezone
 
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Email must be set")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+        return self.create_user(email, password, **extra_fields)
+
+
 class User(AbstractBaseUser, PermissionsMixin):
-
-    name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20)
-    password = models.CharField(max_length=255)
-    aadhar = models.CharField(max_length=20, blank=True, null=True)
-
-
 
     ROLE_CHOICES = [
         ("worker", "Worker"),
         ("employer", "Employer"),
         ("NGO", "NGO"),
     ]
+
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20)
+
+    aadhar = models.CharField(max_length=20, blank=True, null=True)
+
     role = models.CharField(
         max_length=20,
         choices=ROLE_CHOICES,
         default="worker"
     )
 
-    location = geomodels.PointField(
-        geography=True,
-        blank=True,
-        null=True
-    )
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
 
     rating = models.FloatField(default=1.0)
     address = models.TextField(blank=True, null=True)
-
-    community = models.ForeignKey(
-        "Community",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="users"
-    )
 
     points = models.IntegerField(default=0)
 
@@ -47,7 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
-    #auth config
+    objects = UserManager()
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["name", "phone"]
 
