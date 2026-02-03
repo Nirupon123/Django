@@ -80,10 +80,6 @@ WSGI_APPLICATION = 'auth_service.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-
-
-
-
 DATABASES = {
     "default": {
         "ENGINE": os.getenv("DB_ENGINE"),
