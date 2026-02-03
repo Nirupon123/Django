@@ -43,9 +43,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'graphene_django',
     'accounts',
+    'graphene_django',
 ]
+
+
+GRAPHENE = {
+    "SCHEMA": "auth_service.schema.schema",
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
+}
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
